@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ 
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xmlns:tx="http://www.springframework.org/schema/tx"
+ 
+ xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
+ http://www.springframework.org/schema/context 
+ http://www.springframework.org/schema/context/spring-context-4.1.xsd 
+ 
+ http://www.springframework.org/schema/tx 
+ http://www.springframework.org/schema/tx/spring-tx.xsd 
+ http://www.springframework.org/schema/aop 
+ http://www.springframework.org/schema/aop/spring-aop.xsd">
+ <context:property-placeholder location="/WEB-INF/db.properties,/WEB-INF/redis.properties"/>
+ 
+ <!-- 配置事务管理器 -->
+      <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+      </bean>
+ <!-- 启用事务注解 ,注意：需要先启用tx命名空间-->
+ <tx:annotation-driven transaction-manager="transactionManager"/>
+ 
+ <context:property-placeholder location="/WEB-INF/db.properties"/>
+ <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+ <!-- 驱动包名 -->
+ <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+ <!-- 数据库地址 -->
+ <property name="url" value="jdbc:mysql://localhost:3306/school"/>
+ <!-- 用户名 -->
+ <property name="username" value="${mysqlname}" />
+ <!-- 密码 -->
+ <property name="password" value="${mysqlpwd}" />
+ <!-- 最大连接数量 -->
+ <!-- <property name="maxActive" value="10" /> -->
+ <property name="maxTotal" value="10" />
+ <!-- 最小空闲连接 -->
+ <property name="minIdle" value="1" />
+ <!-- 最大空闲连接 -->
+ <property name="maxIdle" value="5" />
+ <!-- 初始化连接数量 -->
+ <property name="initialSize" value="2" />
+ <!-- 连接被泄露时是否打印 -->
+ <property name="logAbandoned" value="true" />
+ <!-- 是否自动回收超时连接 -->
+ <!-- <property name="removeAbandoned" value="true" />
+ 超时等待时间(以秒为单位)
+ <property name="removeAbandonedTimeout" value="10" /> -->
+ </bean>
+ <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+ <property name="dataSource" ref="dataSource" />
+ </bean>
+ <bean id="studentManager" class="com.xu.dao.StudentManager" factory-method="getInstance"> 
+ <property name="jdbcTemplate" ref="jdbcTemplate" />
+ </bean>
+</beans>

@@ -1,0 +1,48 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+    <!-- Other XML Configuration -->
+   <!-- Load by Spring ContextLoaderListener -->
+   <!-- 加载spring的配置文件 -->
+   <context-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>/WEB-INF/root-context.xml,/WEB-INF/jdbc.xml,/WEB-INF/spring-redis.xml</param-value>
+   </context-param>
+ 
+   <!-- Spring ContextLoaderListener -->
+   <!-- 添加spring监听器 -->
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+   
+   <servlet>
+       <servlet-name>spring-mvc</servlet-name>
+       <servlet-class>org.springframework.web.servlet.DispatcherServlet
+       </servlet-class>
+       <load-on-startup>1</load-on-startup>
+   </servlet>  
+    
+    <!-- 注册axis2的servlet -->
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <servlet-class>org.apache.axis2.transport.http.AxisServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    
+   <servlet-mapping>
+       <servlet-name>spring-mvc</servlet-name>
+       <url-pattern>/</url-pattern>
+   </servlet-mapping>
+   
+   
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+   
+  
+</web-app>
